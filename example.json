@@ -1,0 +1,90 @@
+{
+  "name": "test-app",
+  "description": "My app's description",
+  "environments": [{
+    "name": "test-env",
+    "CNAMEPrefix": "test",
+    "tier": {
+      "name": "Web Server",
+      "type": "Web Server",
+      "version": "I have no idea"
+    },
+    "tags": {
+      "keytag": "valuetag"
+    },
+    "solutionStackName": "64bit Amazon Linux 2014.02 running Node.js",
+    "aws:autoscaling:asg": {
+      "Availability Zones": "Any 1",
+      "Cooldown": 360,
+      "MinSize": 1,
+      "MaxSize" 4
+    },
+    "aws:autoscaling:launchconfiguration": {
+      "EC2KeyName": "keyname",
+      "IamInstanceProfile": "arn:aws:iam::123456789012:instance-profile/ElasticBeanstalkProfile",
+      "InstanceType": "m1.small",
+      "MonitoringInterval": 5,
+      "SecurityGroups": "elasticbeanstalk-default"
+    },
+    "aws:autoscaling:trigger": {
+      "BreachDuration": 5,
+      "LowerBreachScaleIncrement": -1,
+      "UpperBreachScaleIncrement": 1,
+      "LowerThreshold": 2000000,
+      "UpperThreshold": 6000000,
+      "MeasureName": "NetworkOut",
+      "Unit": "Bytes",
+      "Period": 5,
+      "Statistic": "Average"
+    },
+    "aws:autoscaling:updatepolicy:rollingupdate": {},
+    "aws:ec2:vpc": {},
+    "aws:elasticbeanstalk:application": {
+      "Application Healthcheck URL": "/"
+    },
+    "aws:elasticbeanstalk:command": {
+      "Timeout": 480
+    },
+    "aws:elasticbeanstalk:environment": {
+      "EnvironmentType": "LoadBalanced"
+    },
+    "aws:elasticbeanstalk:application:environment": {
+      "MY_ENV_VAR": "JETPACKS"
+    },
+    "aws:elasticbeanstalk:monitoring": {
+      "Automatically Terminate Unhealthy Instances": true
+    },
+    "aws:elasticbeanstalk:sns:topics": {
+      "Notification Endpoint": "adama@battlestar.com",
+      "Notification Protocol": "email"
+    },
+    "aws:elasticbeanstalk:sqsd": {},
+    "aws:elb:healthcheck": {
+      "HealthyThreshold": 3,
+      "Interval": 30,
+      "Timeout": 5,
+      "UnhealthyThreshold": 5
+    },
+    "aws:elb:loadbalancer": {
+      "CrossZone": false,
+      "LoadBalancerHTTPPort": 80,
+      "LoadBalancerPortProtocol": "HTTP",
+      "LoadBalancerHTTPSPort": 443,
+      "LoadBalancerSSLPortProtocol": "HTTPS"
+    },
+    "aws:elb:policies": {
+      "ConnectionDrainingEnabled": false,
+      "ConnectionDrainingTimeout": 20,
+      "Stickiness Cookie Expiration": 0,
+      "Stickiness Policy": false
+    },
+    "aws:elasticbeanstalk:container:nodejs": {
+      "NodeCommand": "npm start",
+      "NodeVersion": "0.8.21",
+      "GzipCompression": true,
+      "ProxyServer": "nginx"
+    },
+    "aws:elasticbeanstalk:container:nodejs:staticfiles": {},
+    "aws:elasticbeanstalk:hostmanager": {}
+  }],
+}
