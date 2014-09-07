@@ -2,9 +2,9 @@
   "name": "test-app",
   "description": "My app's description",
   "environments": [{
-    "name": "test-env",
+    "name": "mycompany-myapiservice-test",
+    "CNAMEPrefix": "mycomapny-myapiservice-test",
     "description": "test-env's description",
-    "CNAMEPrefix": "test",
     "tier": "Web Server",
     "tags": {
       "keytag": "valuetag"
