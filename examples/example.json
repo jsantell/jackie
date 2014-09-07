@@ -3,12 +3,9 @@
   "description": "My app's description",
   "environments": [{
     "name": "test-env",
+    "description": "test-env's description",
     "CNAMEPrefix": "test",
-    "tier": {
-      "name": "Web Server",
-      "type": "Web Server",
-      "version": "I have no idea"
-    },
+    "tier": "Web Server",
     "tags": {
       "keytag": "valuetag"
     },
