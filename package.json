@@ -1,0 +1,15 @@
+{
+  "name": "jack",
+  "version": "0.0.1",
+  "description": "deployment app for ebs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jordan Santell <jsantell@gmail.com>",
+  "dependencies": {
+    "express": "^4.8.8",
+    "fs-promise": "^0.2.0",
+    "underscore": "^1.7.0"
+  }
+}
