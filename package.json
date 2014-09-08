@@ -4,12 +4,21 @@
   "description": "deployment app for ebs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm install && node index.js",
+    "integration": "export NODE_ENV=test && node ./scripts/test.js functional",
+    "unit": "export NODE_ENV=test && node ./scripts/test.js unit",
+    "test": "export NODE_ENV=test && node ./scripts/test.js"
   },
   "author": "Jordan Santell <jsantell@gmail.com>",
   "dependencies": {
+    "aws-sdk": "^2.0.15",
     "express": "^4.8.8",
     "fs-promise": "^0.2.0",
-    "underscore": "^1.7.0"
+    "underscore": "^1.7.0",
+    "when": "^3.4.5"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "mocha": "^1.21.4"
   }
 }
