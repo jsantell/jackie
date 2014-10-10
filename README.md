@@ -16,7 +16,10 @@ npm install jackie --save
 ```
 var Jackie = require("jackie");
 
-var jackie = new Jackie({ accessKeyId: process.env.S3_ACCESS_KEY_ID, secretAccessKey: process.env.S3_SECRET_ACCESS_KEY });
+var jackie = new Jackie({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+});
 
 // Setup
 jackie.addApplication(fs.readFileSync(__dirname + "/examples/example.json, "utf-8").toString()).then(function () {
