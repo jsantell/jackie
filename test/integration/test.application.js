@@ -25,7 +25,7 @@ describe("Application", function () {
     it("adds application to AWS if does not exist", function (done) {
       var jackie = this.jackie = new Jackie(utils.AWSConfig());
       var app = new Application(this.jackie._eb, "testapp");
-      app.initialize({ description: "my description" }).then(function () {
+      app.initialize({ Description: "my description" }).then(function () {
         return jackie.getApplications();
       }).then(function (apps) {
         expect(apps.length).to.be.equal(1);
@@ -42,7 +42,7 @@ describe("Application", function () {
       var jackie = this.jackie = new Jackie(utils.AWSConfig());
       var app = new Application(this.jackie._eb, "testapp");
       app.initialize().then(function () {
-        return app.initialize({ description: "my description" });
+        return app.initialize({ Description: "my description" });
       }).then(function () {
         return jackie.getApplications();
       }).then(function (apps) {
@@ -63,7 +63,7 @@ describe("Application", function () {
     it("returns AWS ApplicationDescription", function (done) {
       var jackie = this.jackie = new Jackie(utils.AWSConfig());
       var app = new Application(this.jackie._eb, "testapp");
-      app.initialize({ description: "my description" }).then(function () {
+      app.initialize({ Description: "my description" }).then(function () {
         return app.info();
       }).then(function (data) {
         expect(data.ApplicationName).to.be.equal("testapp");
@@ -106,10 +106,9 @@ describe("Application", function () {
         return utils.addFileToBucket(jackie._eb, "jackie-test-mybucket1453", "testapp.zip", path.join(__dirname, "..", "fixtures", "testapp.zip"));
       }).then(function () {
         return app.createVersion({
-          description: "new version",
-          version: "1.0.0",
-          bucket: "jackie-test-mybucket1453",
-          key: "testapp.zip"
+          Description: "new version",
+          VersionLabel: "1.0.0",
+          SourceBundle: { S3Bucket: "jackie-test-mybucket1453", S3Key: "testapp.zip" }
         });
       }).then(function (data) {
         expect(data.ApplicationVersion.ApplicationName).to.be.equal("testapp");

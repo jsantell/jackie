@@ -4,13 +4,7 @@ var _ = require("underscore");
 var expect = require("chai").expect;
 var utils = require("../utils");
 var Jackie = require("../../");
-var app1Manifest = JSON.parse(fs.readFileSync(path.join(__dirname, "/../fixtures/app1.json"), "utf8").toString());
 var Application = require("../../lib/application");
-
-var app1 = {
-  name: "jackietest My App",
-  description: "An app for testing jackie."
-};
 
 function clear (done) {
   if (!this.jackie) {
