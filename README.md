@@ -66,6 +66,10 @@ Adds a new version of the application's artifact via S3 link. Parameters:
 * `bucket` - S3 bucket name where the artifact lives.
 * `key` - S3 key on the bucket where the aritfact can be found.
 
+#### (Promise->Environment) application.createEnvironment(envManifest)
+
+Creates a new environment on AWS, and returns a new Environment object and tracks it internally. An example environment manifest can be found in [./examples/example.json](https://github.com/jsantell/jackie/tree/master/examples/example.json), the objects in the `environments` array.
+
 #### (Promise->[EnvironmentDescription]) application.getEnvironments()
 
 Returns a promise that returns an array of [EnvironmentDescription](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/ElasticBeanstalk.html#describeEnvironments-property) related to this application from AWS.
@@ -74,9 +78,26 @@ Returns a promise that returns an array of [EnvironmentDescription](http://docs.
 
 Returns a promise that returns an [EnvironmentDescription](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/ElasticBeanstalk.html#describeEnvironments-property) for the environment with `envName` that is associated with the current application.
 
+#### (Promise->Environment|null) application.deploy(envName, version)
+
+Deploys application `version` on environment named `envName`.
+
 #### (Promise) application.remove()
 
 Removes application from AWS. Should **not** be called directly, but via the Jackie instance.
+
+#### (Promise->Environment) environment.deploy(version);
+
+Deploys `version` of the application on this environment. Creates the environment if
+
+## Tests
+
+Run tests via:
+
+* `npm run unit` - runs unit tests.
+* `npm run integration` - runs integration tests, pinging AWS. Requires environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` defined with AWS credentials with access to elastic beanstalk.
+* `npm run integration-mock` - runs integration tests with mocks. Does not require AWS credentials.
+* `npm test` - runs both unit and (non-mocked) integration tests.
 
 ## License
 
