@@ -16,7 +16,8 @@ var TYPES = ["integration", "unit"];
 var testDirectories = [];
 
 if (type) {
-  testDirectories.push(__dirname + "/../test/" + type);
+  process.env["JACKIE_TESTS_MOCK"] = type.split("-")[1] === "mock";
+  testDirectories.push(__dirname + "/../test/" + (type.split("-")[0]));
 }
 else {
   TYPES.forEach(function (dir) {
@@ -33,6 +34,7 @@ testDirectories.forEach(function (dir) {
 });
 
 mocha.run(function (failures) {
+  process.env["JACKIE_TESTS_MOCK"] = null;
   process.exit(failures);
 });
 
