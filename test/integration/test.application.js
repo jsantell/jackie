@@ -137,4 +137,25 @@ describe("Application", function () {
       }, done);
     });
   });
+
+  describe("Application#remove", function () {
+    it("removes application from AWS", function (done) {
+      var jackie = this.jackie = new Jackie(utils.AWSConfig());
+      jackie.createApplication("testapp").then(function (app) {
+        return app.remove();
+      }).then(function () {
+        return utils.waitUntilDeleted(jackie._eb);
+      }).then(function () {
+        return jackie.getApplications();
+      }).then(function (apps) {
+        expect(apps.length).to.be.equal(0);
+        done();
+      }, done);
+    });
+  });
+
+  describe("Application#createEnvironment", function(){});
+  describe("Application#getEnvironments", function(){});
+  describe("Application#getEnvironment", function(){});
+  describe("Application#deploy", function(){});
 });
