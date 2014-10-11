@@ -6,7 +6,7 @@ var mocha = new Mocha({
   reporter: "spec"
 });
 var type = process.argv[2];
-var UNIT_TEST_DIR_MODELS = __dirname + "/../test/unit/models/";
+var TYPES = ["integration", "unit"];
 
 // `type` is the third argument passed into the script to determine
 // which subset of tests to run
@@ -19,8 +19,8 @@ if (type) {
   testDirectories.push(__dirname + "/../test/" + type);
 }
 else {
-  fs.readdirSync(__dirname + "/../test/").forEach(function (dir) {
-    testDirectories.push(dir);
+  TYPES.forEach(function (dir) {
+    testDirectories.push(path.join(__dirname, "..", "test", dir));
   });
 }
 
