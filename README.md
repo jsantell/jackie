@@ -92,10 +92,12 @@ Deploys `version` of the application on this environment. Creates the environmen
 
 ## Tests
 
+**WARNING** Running non-mock integration tests, with real AWS credentials, will wipe all of your EB applications and instances. Use with a separate account or region.
+
 Run tests via:
 
 * `npm run unit` - runs unit tests.
-* `npm run integration` - runs integration tests, pinging AWS. Requires environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` defined with AWS credentials with access to elastic beanstalk.
+* `npm run integration` - runs integration tests, pinging AWS. Requires environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` defined with AWS credentials with access to elastic beanstalk and S3.
 * `npm run integration-mock` - runs integration tests with mocks. Does not require AWS credentials.
 * `npm test` - runs both unit and (non-mocked) integration tests.
 

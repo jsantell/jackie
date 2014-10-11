@@ -1,11 +1,45 @@
+var REGION = "us-west-1";
+var fs = require("fs");
 var when = require("when");
+var AWS = require("aws-sdk");
+var _ = require("underscore");
+
+exports.useMocks = function useMocks () {
+  return process.env["JACKIE_TESTS_MOCK"] === "true";
+};
 
 exports.AWSConfig = function AWSConfig () {
   return {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: "us-west-1",
-    mock: process.env["JACKIE_TESTS_MOCK"] === "true"
+    region: REGION,
+    mock: exports.useMocks()
+  }
+};
+
+exports.addFileToBucket = function addFileToBucket (eb, bucket, key, file) {
+  if (exports.useMocks()) {
+    return eb.createBucket({ Bucket: bucket }).then(function () {
+      return eb.putObject({
+        Bucket: bucket,
+        Key: key,
+        Body: fs.readFileSync(file)
+      });
+    });
+  }
+  else {
+    var deferred = when.defer();
+    var s3 = new AWS.S3(_.pick(["accessKeyId", "secretAccessKey", "region"], exports.AWSConfig()));
+    s3.createBucket({ CreateBucketConfiguration: { LocationConstraint: REGION }, Bucket: bucket }, function (err, data) {
+      if (err && !/BucketAlreadyExists/.test(err) && !/BucketAlreadyOwnedByYou/.test(err)) {
+        return deferred.reject(err);
+      }
+      s3.putObject({ Bucket: bucket, Key: key, Body: fs.readFileSync(file) }, function (err, data) {
+        if (err) return deferred.reject(err);
+        deferred.resolve(data);
+      });
+    });
+    return deferred.promise;
   }
 };
 

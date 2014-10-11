@@ -6,6 +6,7 @@ var utils = require("../utils");
 var Jackie = require("../../");
 var app1Manifest = JSON.parse(fs.readFileSync(path.join(__dirname, "/../fixtures/app1.json"), "utf8").toString());
 var Application = require("../../lib/application");
+var Environment = require("../../lib/environment");
 
 function clear (done) {
   if (!this.jackie) {
@@ -36,7 +37,7 @@ describe("Application", function () {
         done();
       }, done);
     });
-    
+
     it("updates description if application exists", function (done) {
       var jackie = this.jackie = new Jackie(utils.AWSConfig());
       var app = new Application(this.jackie._eb, "testapp");
@@ -74,12 +75,65 @@ describe("Application", function () {
         done();
       }, done);
     });
-    
+
     it("returns null if application does not exist on AWS", function (done) {
       var jackie = this.jackie = new Jackie(utils.AWSConfig());
       var app = new Application(this.jackie._eb, "testapp");
       app.info().then(function (data) {
         expect(data).to.be.equal(null);
+        done();
+      }, done);
+    });
+  });
+
+  describe("Application#createEnvironment", function () {
+    it("creates an environment instance with correct options", function (done) {
+      var jackie = this.jackie = new Jackie(utils.AWSConfig());
+      var app = new Application(this.jackie._eb, "testapp");
+      var env = app.createEnvironment("myenv");
+      expect(env.appName).to.be.equal("testapp");
+      expect(env.envName).to.be.equal("myenv");
+      expect(env instanceof Environment).to.be.equal(true);
+      done();
+    });
+  });
+
+  describe("Application#createVersion", function () {
+    it("creates an application version", function (done) {
+      var jackie = this.jackie = new Jackie(utils.AWSConfig());
+      var app = new Application(this.jackie._eb, "testapp");
+      app.initialize().then(function () {
+        return utils.addFileToBucket(jackie._eb, "jackie-test-mybucket1453", "testapp.zip", path.join(__dirname, "..", "fixtures", "testapp.zip"));
+      }).then(function () {
+        return app.createVersion({
+          description: "new version",
+          version: "1.0.0",
+          bucket: "jackie-test-mybucket1453",
+          key: "testapp.zip"
+        });
+      }).then(function (data) {
+        expect(data.ApplicationVersion.ApplicationName).to.be.equal("testapp");
+        expect(data.ApplicationVersion.VersionLabel).to.be.equal("1.0.0");
+        expect(data.ApplicationVersion.SourceBundle.S3Bucket).to.be.equal("jackie-test-mybucket1453");
+        expect(data.ApplicationVersion.SourceBundle.S3Key).to.be.equal("testapp.zip");
+        return app.info();
+      }).then(function (data) {
+        expect(data.Versions[0]).to.be.equal("1.0.0");
+        done();
+      }, done);
+    });
+  });
+
+  describe("Application#update", function () {
+    it("updates application with values", function (done) {
+      var jackie = this.jackie = new Jackie(utils.AWSConfig());
+      var app = new Application(this.jackie._eb, "testapp");
+      app.initialize().then(function () {
+        return app.update({ Description: "my new desc" });
+      }).then(function () {
+        return app.info();
+      }).then(function (data) {
+        expect(data.Description).to.be.equal("my new desc");
         done();
       }, done);
     });
