@@ -28,32 +28,20 @@ describe("Jackie", function () {
 
     it("adds a new application on AWS and creates", function (done) {
       this.jackie = new Jackie(utils.AWSConfig());
-      this.jackie.createApplication(app1).then(function (app) {
+      this.jackie.createApplication("testapp").then(function (app) {
         expect(app instanceof Application).to.be.equal(true);
-        expect(app.appName).to.be.equal(app1.name);
+        expect(app.appName).to.be.equal("testapp");
         done();
       }, done);
     });
 
     it("works idempotently even if application already exists on AWS", function (done) {
       var jackie = this.jackie = new Jackie(utils.AWSConfig());
-      jackie.createApplication(app1).then(function (app) {
-        return jackie.createApplication(app1);
+      jackie.createApplication("testapp").then(function (app) {
+        return jackie.createApplication("testapp");
       }).then(function (app) {
         expect(app instanceof Application).to.be.equal(true);
-        expect(app.appName).to.be.equal(app1.name);
-        done();
-      }, done);
-    });
-
-    it("updates description if different", function (done) {
-      var jackie = this.jackie = new Jackie(utils.AWSConfig());
-      jackie.createApplication(app1).then(function (app) {
-        return jackie.createApplication({ name: app1.name, description: "a new description" });
-      }).then(function (app) {
-        return jackie.getApplication(app1.name);
-      }).then(function (app) {
-        expect(app.description).to.be.equal("a new description");
+        expect(app.appName).to.be.equal("testapp");
         done();
       }, done);
     });
@@ -64,8 +52,8 @@ describe("Jackie", function () {
 
     it("removes existing application", function (done) {
       var jackie = this.jackie = new Jackie(utils.AWSConfig());
-      jackie.createApplication(app1).then(function (app) {
-        return jackie.removeApplication(app.appName);
+      jackie.createApplication("testapp").then(function (app) {
+        return jackie.removeApplication("testapp");
       }).then(function () {
         return utils.waitUntilDeleted(jackie._eb);
       }).then(function () {
@@ -79,7 +67,6 @@ describe("Jackie", function () {
     it("ignores if application doesn't exist", function (done) {
       var jackie = this.jackie = new Jackie(utils.AWSConfig());
       jackie.removeApplication("doesnt exist").then(function (res) {
-        console.log(res);
         expect(true).to.be.equal(true);
         done();
       }, done);
@@ -91,10 +78,10 @@ describe("Jackie", function () {
 
     it("returns associated application", function (done) {
       var jackie = this.jackie = new Jackie(utils.AWSConfig());
-      jackie.createApplication(app1).then(function (app) {
-        return jackie.getApplication(app1.name);
+      jackie.createApplication("testapp").then(function (app) {
+        return jackie.getApplication("testapp");
       }).then(function (app) {
-        expect(app.appName).to.be.equal(app1.name);
+        expect(app.appName).to.be.equal("testapp");
         done();
       }, done);
     });
@@ -111,8 +98,8 @@ describe("Jackie", function () {
   describe("Jackie#getApplications", function () {
     it("returns all applications", function (done) {
       var jackie = this.jackie = new Jackie(utils.AWSConfig());
-      jackie.createApplication(app1).then(function () {
-        return jackie.createApplication({ name: "app2" });
+      jackie.createApplication("app1").then(function () {
+        return jackie.createApplication("app2");
       }).then(function () {
         return jackie.getApplications();
       }).then(function (apps) {
