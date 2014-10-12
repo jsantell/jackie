@@ -162,7 +162,6 @@ describe("Application", function () {
           expect(env.appName).to.be.equal("testapp-ce");
           return app.getEnvironment("test-env-ce");
         }).then(function (env) {
-          console.log("GETENV RESPONSE", env);
           expect(env instanceof Environment).to.be.equal(true);
           expect(env.envName).to.be.equal("test-env-ce");
           expect(env.appName).to.be.equal("testapp-ce");
