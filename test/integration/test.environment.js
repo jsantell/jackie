@@ -76,4 +76,33 @@ describe("Environment", function () {
       }, done);
     });
   });
+  
+  describe("Environment#remove()", function () {
+    it("removes current environment", function (done) {
+      var jackie = this.jackie = new Jackie(utils.AWSConfig());
+      var app = new Application(this.jackie._eb, "test-environment-init2");
+      var env;
+      app.initialize().then(function (app) {
+        env = new Environment(jackie._eb, "test-environment-init2", "enviro");
+        return env.initialize({
+          SolutionStackName: "64bit Amazon Linux 2014.09 v1.0.8 running Node.js"
+        });
+      }).then(function (env) {
+        return env.remove();
+      }).then(function (data) {
+        expect(data.Status).to.be.equal("Terminating");
+        // Need to add polling for non-mock integration
+        setTimeout(function () {
+          env.info().then(function (data) {
+            expect(data.Status).to.be.equal("Terminated");
+            done();
+          });
+        }, 200);
+      }, done);
+    });
+  });
+
+  describe("Environment#update()", function () {
+    
+  });
 });
