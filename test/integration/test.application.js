@@ -100,10 +100,10 @@ describe("Application", function () {
           SourceBundle: { S3Bucket: "jackie-test-mybucket1453", S3Key: "testapp.zip" }
         });
       }).then(function (data) {
-        expect(data.ApplicationVersion.ApplicationName).to.be.equal("testapp");
-        expect(data.ApplicationVersion.VersionLabel).to.be.equal("1.0.0");
-        expect(data.ApplicationVersion.SourceBundle.S3Bucket).to.be.equal("jackie-test-mybucket1453");
-        expect(data.ApplicationVersion.SourceBundle.S3Key).to.be.equal("testapp.zip");
+        expect(data.ApplicationName).to.be.equal("testapp");
+        expect(data.VersionLabel).to.be.equal("1.0.0");
+        expect(data.SourceBundle.S3Bucket).to.be.equal("jackie-test-mybucket1453");
+        expect(data.SourceBundle.S3Key).to.be.equal("testapp.zip");
         return app.info();
       }).then(function (data) {
         expect(data.Versions[0]).to.be.equal("1.0.0");
@@ -199,6 +199,26 @@ describe("Application", function () {
         }, done);
       });
     });
+
+    describe("Application#createVersion", function () {
+      it("creates a new application version for this application", function (done) {
+        var jackie = this.jackie = new Jackie(utils.AWSConfig());
+        var app;
+        jackie.createApplication("testapp-cv").then(function (_app) {
+          app = _app;
+          return app.createVersion({ VersionLabel: "my version", SourceBundle: { S3Key: "key", S3Bucket: "bucket" } });
+        }).then(function (version) {
+          console.log(version);
+          expect(version.VersionLabel).to.be.equal("my version");
+          return app.info();
+        }).then(function (app) {
+          console.log(app.Versions);
+          expect(app.Versions[0]).to.be.equal("my version");
+          done();
+        });
+      });
+    });
+
     describe("Application#deploy", function () {});
   });
 });
