@@ -18,7 +18,7 @@ function clear (done) {
 describe("Application", function () {
   this.timeout(100000);
   before(clear);
-
+/*
   describe("Application#initialize()", function () {
     afterEach(clear);
 
@@ -86,18 +86,6 @@ describe("Application", function () {
     });
   });
 
-  describe("Application#createEnvironment", function () {
-    it("creates an environment instance with correct options", function (done) {
-      var jackie = this.jackie = new Jackie(utils.AWSConfig());
-      var app = new Application(this.jackie._eb, "testapp");
-      var env = app.createEnvironment("myenv");
-      expect(env.appName).to.be.equal("testapp");
-      expect(env.envName).to.be.equal("myenv");
-      expect(env instanceof Environment).to.be.equal(true);
-      done();
-    });
-  });
-
   describe("Application#createVersion", function () {
     it("creates an application version", function (done) {
       var jackie = this.jackie = new Jackie(utils.AWSConfig());
@@ -153,8 +141,28 @@ describe("Application", function () {
       }, done);
     });
   });
-
-  describe("Application#createEnvironment", function(){});
+*/
+  describe("Application#createEnvironment", function () {
+    it("creates a new environment associated with this application, using defaults", function (done) {
+      var jackie = this.jackie = new Jackie(utils.AWSConfig());
+      var app;
+      jackie.createApplication("testapp").then(function (_app) {
+        app = _app;
+        return app.createEnvironment("test-env", { SolutionStackName: "64bit Amazon Linux 2014.09 v1.0.8 running Node.js" });
+      }).then(function (env) {
+        expect(env instanceof Environment).to.be.equal(true);
+        expect(env.envName).to.be.equal("test-env");
+        expect(env.appName).to.be.equal("testapp");
+        return app.getEnvironment("test-env");
+      }).then(function (env) {
+        console.log("GETENV RESPONSE", env);
+        expect(env instanceof Environment).to.be.equal(true);
+        expect(env.envName).to.be.equal("test-env");
+        expect(env.appName).to.be.equal("testapp");
+        done();
+      }, done);
+    });
+  });
   describe("Application#getEnvironments", function(){});
   describe("Application#getEnvironment", function(){});
   describe("Application#deploy", function(){});
