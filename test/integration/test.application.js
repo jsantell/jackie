@@ -18,7 +18,7 @@ function clear (done) {
 describe("Application", function () {
   this.timeout(100000);
   before(clear);
-/*
+
   describe("Application#initialize()", function () {
     afterEach(clear);
 
@@ -87,6 +87,7 @@ describe("Application", function () {
   });
 
   describe("Application#createVersion", function () {
+    afterEach(clear);
     it("creates an application version", function (done) {
       var jackie = this.jackie = new Jackie(utils.AWSConfig());
       var app = new Application(this.jackie._eb, "testapp");
@@ -112,6 +113,7 @@ describe("Application", function () {
   });
 
   describe("Application#update", function () {
+    afterEach(clear);
     it("updates application with values", function (done) {
       var jackie = this.jackie = new Jackie(utils.AWSConfig());
       var app = new Application(this.jackie._eb, "testapp");
@@ -127,6 +129,7 @@ describe("Application", function () {
   });
 
   describe("Application#remove", function () {
+    afterEach(clear);
     it("removes application from AWS", function (done) {
       var jackie = this.jackie = new Jackie(utils.AWSConfig());
       jackie.createApplication("testapp").then(function (app) {
@@ -141,29 +144,62 @@ describe("Application", function () {
       }, done);
     });
   });
-*/
-  describe("Application#createEnvironment", function () {
-    it("creates a new environment associated with this application, using defaults", function (done) {
-      var jackie = this.jackie = new Jackie(utils.AWSConfig());
-      var app;
-      jackie.createApplication("testapp").then(function (_app) {
-        app = _app;
-        return app.createEnvironment("test-env", { SolutionStackName: "64bit Amazon Linux 2014.09 v1.0.8 running Node.js" });
-      }).then(function (env) {
-        expect(env instanceof Environment).to.be.equal(true);
-        expect(env.envName).to.be.equal("test-env");
-        expect(env.appName).to.be.equal("testapp");
-        return app.getEnvironment("test-env");
-      }).then(function (env) {
-        console.log("GETENV RESPONSE", env);
-        expect(env instanceof Environment).to.be.equal(true);
-        expect(env.envName).to.be.equal("test-env");
-        expect(env.appName).to.be.equal("testapp");
-        done();
-      }, done);
+
+  describe("Application Environment controls", function () {
+    after(clear);
+
+    describe("Application#createEnvironment", function () {
+      it("creates a new environment associated with this application, using defaults", function (done) {
+        var jackie = this.jackie = new Jackie(utils.AWSConfig());
+        var app;
+        var jackie = this.jackie = new Jackie(utils.AWSConfig());
+        jackie.createApplication("testapp-ce").then(function (_app) {
+          app = _app;
+          return app.createEnvironment("test-env-ce", { SolutionStackName: "64bit Amazon Linux 2014.09 v1.0.8 running Node.js" });
+        }).then(function (env) {
+          expect(env instanceof Environment).to.be.equal(true);
+          expect(env.envName).to.be.equal("test-env-ce");
+          expect(env.appName).to.be.equal("testapp-ce");
+          return app.getEnvironment("test-env-ce");
+        }).then(function (env) {
+          console.log("GETENV RESPONSE", env);
+          expect(env instanceof Environment).to.be.equal(true);
+          expect(env.envName).to.be.equal("test-env-ce");
+          expect(env.appName).to.be.equal("testapp-ce");
+          done();
+        }, done);
+      });
     });
+    describe("Application#getEnvironments", function () {
+      it("fetches all environments for related application", function (done) {
+        var jackie = this.jackie = new Jackie(utils.AWSConfig());
+        var app;
+        jackie.createApplication("testapp-ge1").then(function (_app) {
+          app = _app;
+          return app.createEnvironment("test-env-ge1", { SolutionStackName: "64bit Amazon Linux 2014.09 v1.0.8 running Node.js" });
+        }).then(function () {
+          return app.getEnvironments();
+        }).then(function (envs) {
+          expect(envs[0].envName).to.be.equal("test-env-ge1");
+          done();
+        }, done);
+      });
+    });
+    describe("Application#getEnvironment", function () {
+      it("fetches environment by name", function (done) {
+        var jackie = this.jackie = new Jackie(utils.AWSConfig());
+        var app;
+        jackie.createApplication("testapp-ge2").then(function (_app) {
+          app = _app;
+          return app.createEnvironment("test-env-ge2", { SolutionStackName: "64bit Amazon Linux 2014.09 v1.0.8 running Node.js" });
+        }).then(function () {
+          return app.getEnvironment("test-env-ge2");
+        }).then(function (env) {
+          expect(env.envName).to.be.equal("test-env-ge2");
+          done();
+        }, done);
+      });
+    });
+    describe("Application#deploy", function () {});
   });
-  describe("Application#getEnvironments", function(){});
-  describe("Application#getEnvironment", function(){});
-  describe("Application#deploy", function(){});
 });
