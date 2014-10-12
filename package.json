@@ -16,7 +16,8 @@
     "express": "^4.8.8",
     "fs-promise": "^0.2.0",
     "underscore": "^1.7.0",
-    "when": "^3.4.5"
+    "when": "^3.4.5",
+    "eb-mock": "*"
   },
   "devDependencies": {
     "chai": "^1.9.1",
