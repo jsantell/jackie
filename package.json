@@ -7,8 +7,7 @@
     "start": "npm install && node index.js",
     "integration": "export NODE_ENV=test && node ./scripts/test.js integration",
     "integration-mock": "export NODE_ENV=test && node ./scripts/test.js integration-mock",
-    "unit": "export NODE_ENV=test && node ./scripts/test.js unit",
-    "test": "export NODE_ENV=test && node ./scripts/test.js"
+    "test": "export NODE_ENV=test && node ./scripts/test.js integration-mock"
   },
   "author": "Jordan Santell <jsantell@gmail.com>",
   "dependencies": {

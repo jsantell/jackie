@@ -208,11 +208,9 @@ describe("Application", function () {
           app = _app;
           return app.createVersion({ VersionLabel: "my version", SourceBundle: { S3Key: "key", S3Bucket: "bucket" } });
         }).then(function (version) {
-          console.log(version);
           expect(version.VersionLabel).to.be.equal("my version");
           return app.info();
         }).then(function (app) {
-          console.log(app.Versions);
           expect(app.Versions[0]).to.be.equal("my version");
           done();
         });

@@ -6,7 +6,7 @@ var mocha = new Mocha({
   reporter: "spec"
 });
 var type = process.argv[2];
-var TYPES = ["integration", "unit"];
+var TYPES = ["integration"];
 
 // `type` is the third argument passed into the script to determine
 // which subset of tests to run
